@@ -1,0 +1,178 @@
+<div class="container-fluid mpcont bg-colorall">
+  <div class="row">
+    <div class="col-md-10 col-11 mx-auto">
+
+      <div class="row">
+        <div class="col-lg-3 col-md-4 d-md-block">
+          <div class="card bg-common card-left">
+            <a class="nav-link goto-home" href="homepage"><i class="fas fa-arrow-left"></i> Back to home</a>
+            <div class="pad_in bg-colorall d-md-block d-none">
+
+              <nav class="nav nav-item d-md-block d-none">
+
+                <a data-toggle="tab" class="nav-link active goto-home nav-link1" aria-current="page" href="#prof"><i
+                    class="fas fa-user"></i> My Profile </a>
+
+                {{!-- <a data-toggle="tab" class="nav-link goto-home nav-link1" href="#stat"><i
+                    class="far fa-chart-bar"></i>
+                  Stats</a> --}}
+
+                <a data-toggle="tab" class="nav-link goto-home nav-link1" href="#edit_prof"><i
+                    class="fas fa-user-edit"></i> Edit
+                  Profile</a>
+
+                <a data-toggle="tab" class="nav-link goto-home nav-link1" href="#sett"><i class="fas fa-cog"></i>
+                  Settings</a>
+
+              </nav>
+              {{!-- <a class="nav-link" href="homepage"><i class="fas fa-arrow-left"></i> Back to home</a> --}}
+
+            </div>
+          </div>
+        </div>
+
+        {{!-- right side div start --}}
+        <div class="col-lg-8 col-md-9">
+          <div class="card bg-colorall">
+            <div class="card-header border-bottom mb-3 d-md-none">
+              <ul class="nav nav-tab card-header-tab nav-fill pad_in2">
+                <li class="nav-item">
+                  <a data-toggle="tab" class="nav-link goto-home active" aria-current="page" href="#prof"><i
+                      class="fas fa-user mr-1"></i></a>
+                </li>
+                {{!-- <li class="nav-item">
+                  <a data-toggle="tab" class="nav-link goto-home" href="#stat"><i class="far fa-chart-bar"></i></a>
+                </li> --}}
+                <li class="nav-item">
+                  <a data-toggle="tab" class="nav-link goto-home" href="#edit_prof"><i class="fas fa-user-edit"></i></a>
+                </li>
+                <li class="nav-item">
+                  <a data-toggle="tab" class="nav-link goto-home" href="#sett"><i class="fas fa-cog"></i></a>
+                </li>
+              </ul>
+            </div>
+
+            {{!-- my profile start --}}
+            <div class="card-body tab-content border-0">
+              <div class="tab-pane active" id="prof">
+                {{#each rows}}
+                {{#if this.img}}
+                <img class="usersdp" src="{{this.img}}" alt="user's avatar">
+                {{else}}
+                <img class="usersdp" src="/image/Profile.jpg" alt="user's avatar">
+                {{/if}}
+                {{/each}}
+                <h1 class="header1">Welcome <span>{{#if Fname}}
+                    {{Fname}}
+                    {{else}}
+                    to your profile
+                    {{/if}}</span></h1> <br>
+                <div class="mb-3">
+                  <label for="exampleFormControlInput1" class="form-label">Email address</label>
+                  <input type="email" class="form-control" id="" readonly {{#if Email}} placeholder={{Email}} {{else}}
+                    placeholder="name@example.com" {{/if}}>
+                </div>
+                <div class="mb-3">
+                  <label for="exampleFormControlInput1" class="form-label">Username</label>
+                  <input type="email" class="form-control" id="" readonly {{#if Uname}} placeholder="{{{Uname}}}"
+                    {{else}} placeholder="example username" {{/if}}>
+                </div>
+                <div class="mb-3">
+                  <label for="exampleFormControlInput1" class="form-label">Full Name</label>
+                  <input type="text" class="form-control" id="" readonly {{#if Fname}} placeholder="{{{Fname}}}"
+                    {{else}} placeholder="Example Full name" {{/if}}>
+                </div>
+
+                {{#if msg}}
+                <h1 style="color: red; font-size: 15px;text-align:center;">{{{msg}}}</h1>
+                {{/if}}
+
+              </div>
+
+              {{!-- <div class="tab-pane fade" id="stat">
+                <h1 class="header1">Statistic</h1>
+              </div> --}}
+
+              <div class="tab-pane fade" id="edit_prof">
+                <h1 class="header1">Edit Your Profile</h1> <br>
+                <form action="/profile_img" method="post" enctype="multipart/form-data">
+                  <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Change Full Name</label>
+                    <input type="text" class="form-control" name="fname" placeholder="{{{Fname}}}">
+                  </div>
+                  <div class="mb-3">
+                    <label for="formFile" class="form-label">Upload new profile picture</label>
+                    <input class="form-control" type="file" name="profile_image" accept="image/*"> <br>
+                    <input type="submit" class="btn btn-primary gap-10 col-6 mx-auto">
+                  </div>
+                </form>
+                {{!-- <div class="d-grid gap-2 col-6 mx-auto">
+                  <button class="button1" type="button">Submit</button>
+                </div> --}}
+
+              </div>
+
+              <div class="tab-pane fade" id="sett">
+                <h1 class="header1">Settings</h1> <br>
+                <form action="/auth/changepass" method="post" enctype="multipart/form-data">
+                  <div class="mb-3">
+                    <label for="" class="form-label">Current Password</label>
+                    <input type="password" class="form-control" id="oldpass" name="opass" required>
+                    <i class="bi bi-eye-slash inside_box" id="togglePassword"></i> <br>
+                    <label for="" class="form-label">New Password</label>
+                    <input type="password" class="form-control" id="newpass1" name="npass" required>
+                    <i class="bi bi-eye-slash inside_box" id="togglePassword1"></i> <br>
+                    <label for="" class="form-label">Confirm New Password</label>
+                    <input type="password" class="form-control" id="newpass2" name="ncpass" required>
+                    <i class="bi bi-eye-slash inside_box" id="togglePassword2"></i> <br>
+                    <input type="submit" class="btn btn-primary gap-10 col-6 mx-auto">
+                  </div>
+                </form>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+</div>
+</div>
+
+<script>
+  const togglePassword = document.querySelector('#togglePassword');
+  const togglePassword1 = document.querySelector('#togglePassword1');
+  const togglePassword2 = document.querySelector('#togglePassword2');
+
+  const password = document.querySelector('#oldpass');
+  const passwordConfirm = document.querySelector('#newpass1');
+  const passwordConfirm2 = document.querySelector('#newpass2');
+
+  togglePassword.addEventListener('click', () => {
+
+    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+
+    password.setAttribute('type', type);
+
+    this.classList.toggle('bi-eye');
+  });
+  togglePassword1.addEventListener('click', () => {
+
+    const type = passwordConfirm.getAttribute('type') === 'password' ? 'text' : 'password';
+
+    passwordConfirm.setAttribute('type', type);
+
+    this.classList.toggle('bi-eye');
+  });
+  togglePassword2.addEventListener('click', () => {
+
+    const type = passwordConfirm2.getAttribute('type') === 'password' ? 'text' : 'password';
+
+    passwordConfirm2.setAttribute('type', type);
+
+    this.classList.toggle('bi-eye');
+  });
+</script>

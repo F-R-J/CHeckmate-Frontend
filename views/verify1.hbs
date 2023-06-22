@@ -1,0 +1,12 @@
+<div class="center2">
+  <h2 class="tthad">Write the OTP to verify email</h2>
+  <form action="/auth/verify1" method="POST">
+    <div class="txt_field">
+      <input type="text" placeholder="OTP" id="OTP" name="OTP" required>
+    </div>
+    <button class="button3" type="submit">Authenticate</button>
+  </form>
+  {{#if message}}
+  <h1 style="color: red;font-size:15px;text-align:center">{{{message}}}</h1>
+  {{/if}}
+</div>

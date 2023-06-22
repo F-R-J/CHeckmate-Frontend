@@ -1,0 +1,46 @@
+<div class="center">
+  <h1 class="had">Login</h1>
+  <form action="/auth/login" method="post">
+    <div class="txt_field">
+      <input type="text" placeholder="enter email or username" id="email_address" name="email_username" required />
+    </div>
+    <div class="txt_field">
+      <input type="password" placeholder="Password" id="password" name="password" required />
+      <i class="bi bi-eye-slash" id="togglePassword"></i>
+    </div>
+    {{#if message }}
+    <h4 class="alert alert-danger mt-4">{{message}}</h4>
+    {{/if}}
+    <div class="checkbox">
+      <label>
+        <input name="remember" id="remember" value="yes" type="checkbox"> Remember me
+      </label>
+    </div>
+    <div class="pass">
+      <a href="forgotpassword"> Forgot Password? </a>
+    </div>
+
+    <button class="button1" type="submit">Login</button>
+
+    <div class="privacy">
+      Not a member?
+      <a class="blue" href="/signup"> Signup </a>
+    </div>
+  </form>
+</div>
+
+
+<script>
+  const togglePassword = document.querySelector('#togglePassword');
+
+  const password = document.querySelector('#password');
+
+  togglePassword.addEventListener('click', () => {
+
+    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+
+    password.setAttribute('type', type);
+
+    this.classList.toggle('bi-eye');
+  });
+</script>

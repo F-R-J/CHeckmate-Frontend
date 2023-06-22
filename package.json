@@ -1,0 +1,27 @@
+{
+  "name": "checkmate",
+  "version": "1.0.0",
+  "description": "A gaming website",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "devstart": "nodemon app.js",
+    "start": "nodemon app.js"
+  },
+  "author": "BUBT TrialBlazzers",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.2.1",
+    "express-mysql-session": "^2.1.7",
+    "express-session": "^1.17.2",
+    "hbs": "^4.1.2",
+    "jsonwebtoken": "^8.5.1",
+    "mysql": "^2.18.1",
+    "nodemailer": "^6.7.0",
+    "nodemon": "^2.0.14"
+  }
+}

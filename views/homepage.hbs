@@ -1,0 +1,123 @@
+<div class="btn">
+  <span class=" fas fa-bars"></span>
+</div>
+<nav class="sidebar">
+  <div class=" text">
+    <a href="/" id="id1">Checkmate</a>
+  </div>
+  <ul>
+    <li class="active"><a href="#">Dashboard</a></li>
+    <li>
+      <a href="#" class="feat-btn">Games
+        <span class="fas fa-caret-down first"></span>
+      </a>
+      <ul class="feat-show">
+        <li><a href="http://localhost:3000">The Chess Game</a></li>
+        <li><a href="https://fahad-bin.github.io/SnakeGame/">The Snake Game</a></li>
+        <li><a href="https://playtictactoe.org/">Tic Tac Toe</a></li>
+        <li><a href="/brickbreak">Brick Break</a></li>
+      </ul>
+    </li>
+    {{!-- <li><a href="#">Feedback</a></li>
+    <li><a href="#">Report</a></li> --}}
+  </ul>
+</nav>
+<div class="services2" id="services">
+  <h1>Available games</h1>
+  <div class="services_wrapper">
+    <div class="services_card">
+      <h2>The Chase Game</h2>
+      <p>Multiplayer chase games</p>
+      <a href="http://localhost:3000">
+        <div class="services_btn"><button>Get Started</button></div>
+      </a>
+    </div>
+
+    <div class="services_card">
+      <h2>The Snake Game</h2>
+      <p>Snake game with music</p>
+      <a href="https://fahad-bin.github.io/SnakeGame/">
+        <div class="services_btn"><button>Get Started</button></div>
+      </a>
+    </div>
+
+    <div class="services_card">
+      <h2>Tic Tac Toe</h2>
+      <p>AI powered technology</p>
+      <a href="https://playtictactoe.org/">
+        <div class="services_btn"><button>Get Started</button></div>
+      </a>
+    </div>
+
+    <div class="services_card">
+      <h2>Brick Break</h2>
+      <p>Bounce the ball <br>and brake the brick</p>
+      <a href="brickbreak">
+        <div class="services_btn"><button>Get Started</button></div>
+      </a>
+    </div>
+  </div>
+
+  <div class="action">
+    <div class="profile" onclick="menuToggle();">
+      {{#each rows}}
+      {{#if this.img}}
+      <img src="{{this.img}}" alt="user's avatar">
+      {{else}}
+      <img src="/image/Profile.jpg" alt="user's avatar">
+      {{/if}}
+      {{/each}}
+    </div>
+    <div class="menu">
+      <h3>{{id}}<br /></h3>
+      {{!-- <span>Level : pro</span> --}}
+      <ul>
+        <li>
+          <img src="/image/user.png" />
+          <a href="/profile">My Profile</a>
+        </li>
+        <li> <img src="/image/edit.png" /> <a href="/profile">Edit Profile</a></li>
+        {{!-- <li> <img src="/image/inbox.png" /> <a href="/profile">Inbox</a></li>
+        <li> <img src="/image/settings.png" /> <a href="/profile">Settings</a></li>
+        <li> <img src="/image/help.png" /> <a href="#">Help</a></li> --}}
+        <form action="/auth/logout" method="post">
+          <li> <img src="/image/log-out.png" /> <button class="logoutBtn">Logout</button></li>
+        </form>
+      </ul>
+    </div>
+  </div>
+
+  <div class="homecontent">
+    <h1>Don't know how to play Chess? Not a problem. <br />Watch the video.</h1>
+    <div class="homecontent1">
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/NAIQyoPcjNM" title="YouTube video player"
+        frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen></iframe>
+    </div>
+    <h1>Don't know how to play Tak Tac Toe? Not a problem.
+      <br />Watch the video.
+    </h1>
+    <div class="homecontent1">
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/OmC07DvEayY" title="YouTube video player"
+        frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen></iframe>
+    </div>
+  </div>
+
+</div>
+<script>
+  $('.btn').click(function () {
+    $(this).toggleClass("click");
+    $('.sidebar').toggleClass("show");
+  }); $('.feat-btn').click(function () {
+    $('nav ul .feat-show').toggleClass("show"); $('nav ul.first').toggleClass("rotate");
+  }); $('.serv-btn').click(function () { $('navul .serv-show').toggleClass("show1"); $('nav ul.second').toggleClass("rotate"); }); $('nav ul li').click(function () {
+    $(this).addClass("active").siblings().removeClass("active");
+  });
+</script>
+<script>
+  function menuToggle() {
+    const toggleMenu = document.querySelector('.menu');
+    toggleMenu.classList.toggle('active')
+  }
+</script>

@@ -1,0 +1,63 @@
+<!-- component -->
+
+<div class="center">
+  <h1 class="had">Sign up</h1>
+  <form action="/auth/signup" method="post">
+    <div class="txt_field">
+      <input type="text" name="name" placeholder="Full Name" id="name" required />
+    </div>
+    <div class="txt_field">
+      <input type="text" name="id" placeholder="select username" id="id" required />
+    </div>
+    <div class="txt_field">
+      <input type="email" name="email" placeholder="Email" id="email" required />
+    </div>
+    <div class="txt_field">
+      <input type="password" name="password" placeholder="Password" id="password" required />
+      <i class="bi bi-eye-slash" id="togglePassword"></i>
+    </div>
+    <div class="txt_field">
+      <input type="password" name="passwordConfirm" placeholder="Confirm Password" id="passwordConfirm" required />
+      <i class="bi bi-eye-slash" id="togglePassword1"></i>
+    </div>
+
+    {{#if message }}
+    <h4 class="alert alert-danger mt-4">{{message}}</h4>
+    {{/if}}
+
+    <button type="submit" id="button1" class="button1">
+      <span>
+      </span>
+      Create Account
+    </button>
+    <div class="privacy"> By signing up, you agree to the <a class="blue" href="terms&policy">Terms of Service Privacy
+        Policy</a>
+    </div>
+    <div class="privacy"> Already have an account? <a class="blue" href="/login">Login</a></div>
+  </form>
+
+</div>
+<script>
+  const togglePassword = document.querySelector('#togglePassword');
+  const togglePassword1 = document.querySelector('#togglePassword1');
+
+  const password = document.querySelector('#password');
+  const passwordConfirm = document.querySelector('#passwordConfirm');
+
+  togglePassword.addEventListener('click', () => {
+
+    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+
+    password.setAttribute('type', type);
+
+    this.classList.toggle('bi-eye');
+  });
+  togglePassword1.addEventListener('click', () => {
+
+    const type = passwordConfirm.getAttribute('type') === 'password' ? 'text' : 'password';
+
+    passwordConfirm.setAttribute('type', type);
+
+    this.classList.toggle('bi-eye');
+  });
+</script>
