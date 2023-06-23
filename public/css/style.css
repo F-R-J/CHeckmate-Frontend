@@ -9,11 +9,11 @@
 .navbar {
   /* background: #000000; */
   background: linear-gradient(to right, #141e30, #243b55);
-  height: 80px;
+  height: 65px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.2rem;
+  font-size: 30px;
   position: sticky;
   top: 0;
   z-index: 999;
@@ -22,11 +22,12 @@
 .navbar__container {
   display: flex;
   justify-content: space-between;
-  height: 80px;
+  height: 65px;
   z-index: 1;
   width: 100%;
   margin: 0 auto;
-  padding: 0 50px;
+  padding-left: 40px;
+  padding-right: 20px;
 }
 
 #navbar_logo {
@@ -51,15 +52,16 @@
 }
 
 .navbar_item {
-  height: 80px;
+  height: 65px;
 }
 
 .navbar_links {
   color: #fff;
   display: flex;
+  font-size: 20px;
   align-items: center;
   justify-content: center;
-  width: 125px;
+  width: 100px;
   text-decoration: none;
   height: 100%;
   transition: all 0.3s ease;
@@ -67,9 +69,10 @@
 
 .navbar_btn {
   display: flex;
+  font-size: 20px;
   justify-content: center;
   align-items: center;
-  padding: 0 1rem;
+  padding: 0 10px;
   width: 100%;
 }
 
@@ -100,7 +103,7 @@
   .navbar__container {
     display: flex;
     justify-content: space-between;
-    height: 80px;
+    height: 60px;
     z-index: 1;
     width: 100%;
     max-width: 1366px;
@@ -124,9 +127,9 @@
     top: 100%;
     opacity: 1;
     transition: all 0.5s ease;
-    z-index: 99;
-    height: 60vh;
-    font-size: 1.6rem;
+    z-index: 2;
+    height: auto;
+    font-size: 20px;
   }
 
   #navbar_logo {
@@ -147,7 +150,7 @@
 
   .navbar_links {
     text-align: center;
-    padding: 2rem;
+    padding: 20px;
     width: 100%;
     display: table;
   }
@@ -244,15 +247,15 @@
   border-bottom: 4px solid rgb(132, 0, 255);
 }
 
-@media screen and (max-width: 768px) {
+/* @media screen and (max-width: 768px) {
   .hero_heading {
-    font-size: 60px;
+    font-size: 50px;
   }
 
   .hero_description {
-    font-size: 40px;
+    font-size: 30px;
   }
-}
+} */
 
 /* For 1366 screen */
 @media screen and (max-width: 1366px) {
@@ -262,22 +265,22 @@
     padding: 200px 0;
   }
   .hero_heading{
-    font-size: 100px;
-  }
-  .hero_description{
     font-size: 60px;
   }
+  .hero_description{
+    font-size: 35px;
+  }
   .main_content h1{
-    font-size: 2rem;
+    font-size: 30px;
   }
   .main_content h2{
-    font-size: 4rem;
+    font-size: 20px;
   }
   .main_content p{
-    font-size: 2rem;
+    font-size: 20px;
   }
   .services{
-    padding: 10rem 0;
+    padding: 20px 0;
   }
 }
 
@@ -294,11 +297,12 @@
   align-items: center;
   justify-content: center;
   margin: 0 auto;
-  height: 100vh;
+  height: auto;
   z-index: 1;
-  width: 100%;
+  width: 90%;
   max-width: 1366px;
   padding: 0 50px;
+  padding-bottom: 250px;
 }
 
 .main_content {
@@ -361,7 +365,7 @@
 }
 
 .main_btn:after {
-  position: absolute;
+  /* position: absolute; */
   content: "";
   top: 0;
   left: 0;
@@ -396,6 +400,24 @@
   background-image: linear-gradient(to right, #00dbde 0%, #fc00ff 100%);
 }
 
+.main_container2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  height: auto;
+  z-index: 1;
+  width: 90%;
+  max-width: 1366px;
+  padding: 0 50px;
+}
+
+.main_content2 {
+  color: #fff;
+  width: 100%;
+}
+
 .fa-gamepad,
 .fa-users {
   font-size: 14rem;
@@ -425,57 +447,87 @@
   }
 
   .main_img-card {
-    height: 425px;
-    width: 425px;
+    height: 350px;
+    width: 350px;
   }
 
   .main_content {
     text-align: center;
-    margin-bottom: 4rem;
+    margin-bottom: 20px;
   }
 
   .main_content h1 {
-    font-size: 2.5rem;
-    margin-top: 2rem;
+    font-size: 25px;
+    margin-top: 20px;
   }
 
   .main_content h2 {
-    font-size: 3rem;
+    font-size: 20px;
   }
 
   .main_content p {
     margin-top: 1rem;
     font-size: 1.5rem;
   }
+
+  .main_container2 {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin: 0 auto;
+    height: 90%;
+  }
+
+  .main_content2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .main_content2 h1 {
+    font-size: 25px;
+    margin-top: 20px;
+  }
+
+  .main_content2 h2 {
+    font-size: 20px;
+  }
+
+  .main_content2 p {
+    margin-top: 1rem;
+    font-size: 1.5rem;
+  }
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 450px) {
   .main_img-card {
-    width: 250px;
-    height: 250px;
+    width: 225px;
+    height: 225px;
   }
 
   .fa-gamepad,
   .fa-users {
-    font-size: 4rem;
+    font-size: 30px;
   }
 
   .main_content h1 {
-    font-size: 2rem;
-    margin-top: 3rem;
+    font-size: 25px;
+    margin-top: 15px;
   }
 
   .main_content h2 {
-    font-size: 2rem;
+    font-size: 20px;
   }
 
   .main_content p {
-    margin-top: 2rem;
+    margin-top: 10px;
+    font-size: 20px;
   }
 
-  .mian_btn {
-    padding: 12px 36px;
-    margin: 2.5rem 0;
+  .main_btn {
+    padding: 12px 24px;
+    margin: 20px 0;
   }
 }
 
@@ -489,7 +541,7 @@
   align-items: center;
   padding-top: 100px;
   padding-bottom: 80px;
-  height: 100vh;
+  height: auto;
   z-index: 10;
 }
 
@@ -785,12 +837,11 @@ section::after {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  opacity: 0.7;
+  opacity: 1;
   transition: 0.5s;
 }
 
 .container .card:hover .content {
-  opacity: 1;
   transform: translateY(-20px);
 }
 

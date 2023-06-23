@@ -1,15 +1,17 @@
 require("dotenv").config();
 const db = require("../db/database");
 const USER = require("../db/models/loginSchema");
-//const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const fs = require("fs");
-//const express = require("express");
 const e = require("express");
-//const async = require("hbs/lib/async");
 
+
+//const jwt = require("jsonwebtoken");
+//const express = require("express");
+//const async = require("hbs/lib/async");
 //const router = express.Router()
+
 
 exports.signup = async (req, res) => {
   //console.log(req.body);
@@ -36,6 +38,7 @@ exports.signup = async (req, res) => {
   } else {
     cnt1 = 1;
   }
+
   // db.query(
   //   "select email from login where email=?",  
   //   [email],
@@ -64,69 +67,82 @@ exports.signup = async (req, res) => {
   //   }
   // );
 
-  db.query("select id from login where id=?", [id], async (error, results) => {
-    if (error) {
-      //console.log(error);
-    }
-    if (results.length > 0) {
-      return res.render("signup", {
-        layout: "/layouts/logLayout",
-        message: "The username is already taken",
-      });
-    } else if (cnt1 == 1) {
-      let hashedPassword = await bcrypt.hash(password, 8);
-      //console.log(hashedPassword);
-
-      var digits = "0123456789";
-      let OTP = "";
-      for (let i = 0; i < 6; i++) {
-        OTP += digits[Math.floor(Math.random() * 10)];
-      }
-
-      let transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: process.env.GMAIL,
-          pass: process.env.GMAIL_PASSWORD,
-        },
-      });
-
-      let mailOptions = {
-        from: "checkmate.sdp@gmail.com",
-        to: email,
-        subject: "Verification code for Checkmate profile.",
-        text: "Your OTP is : " + OTP,
-      };
-
-      transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-          //console.log(error);
-        } else {
-          //console.log("Email sent: " + info.response);
-          const user = {
-            name: name,
-            id: id,
-            email: email,
-            OTP: OTP,
-            pass: hashedPassword,
-          };
-
-          const data = JSON.stringify(user);
-
-          fs.writeFile("./user.json", data, (err) => {
-            if (err) {
-              //console.log(err);
-            } else {
-              //console.log("Data saved");
-            }
-          });
-
-          res.redirect('/verify')
-        }
-      });
-    }
-  });
+  let userID = await USER.findOne({ ID: id });
+  if (userID) {
+    return res.render("signup", {
+      layout: "/layouts/logLayout",
+      message: "The username is already taken",
+    });
+  } else if (cnt1 == 1) {
+    let hashedPassword = await bcrypt.hash(password, 8);
+    //console.log(hashedPassword);
+  }
 };
+
+
+// db.query("select id from login where id=?", [id], async (error, results) => {
+//   if (error) {
+//     //console.log(error);
+//   }
+//   if (results.length > 0) {
+//     return res.render("signup", {
+//       layout: "/layouts/logLayout",
+//       message: "The username is already taken",
+//     });
+//   } else if (cnt1 == 1) {
+//     let hashedPassword = await bcrypt.hash(password, 8);
+//     //console.log(hashedPassword);
+
+//     var digits = "0123456789";
+//     let OTP = "";
+//     for (let i = 0; i < 6; i++) {
+//       OTP += digits[Math.floor(Math.random() * 10)];
+//     }
+
+//     let transporter = nodemailer.createTransport({
+//       service: "gmail",
+//       auth: {
+//         user: process.env.GMAIL,
+//         pass: process.env.GMAIL_PASSWORD,
+//       },
+//     });
+
+//     let mailOptions = {
+//       from: "checkmate.sdp@gmail.com",
+//       to: email,
+//       subject: "Verification code for Checkmate profile.",
+//       text: "Your OTP is : " + OTP,
+//     };
+
+//     transporter.sendMail(mailOptions, function (error, info) {
+//       if (error) {
+//         //console.log(error);
+//       } else {
+//         //console.log("Email sent: " + info.response);
+//         const user = {
+//           name: name,
+//           id: id,
+//           email: email,
+//           OTP: OTP,
+//           pass: hashedPassword,
+//         };
+
+//         const data = JSON.stringify(user);
+
+//         fs.writeFile("./user.json", data, (err) => {
+//           if (err) {
+//             //console.log(err);
+//           } else {
+//             //console.log("Data saved");
+//           }
+//         });
+
+//         res.redirect('/verify')
+//       }
+//     });
+//   }
+// });
+
 
 exports.verify = (req, res) => {
   //console.log(req.body);
@@ -149,14 +165,14 @@ exports.verify = (req, res) => {
             if (error) {
               //console.log(error);
             } else {
-              db.query("insert into profileimg set ?",{
+              db.query("insert into profileimg set ?", {
                 uid: user.id,
-                img:''
-              },(err,reslt)=>{
-                if(err){
+                img: ''
+              }, (err, reslt) => {
+                if (err) {
                   //console.log(err)
                 }
-                else{
+                else {
                   delete req.session.msg
                   // console.log(results);
                   res.redirect('/login')
@@ -173,65 +189,113 @@ exports.verify = (req, res) => {
   });
 };
 
-exports.login = (req, res) => {
-  //console.log(req.body);
 
+exports.login = async (req, res) => {
   const { email_username, password, remember } = req.body;
 
   if (remember == "yes") {
     //console.log("remembered");
   }
 
-  db.query(
-    "Select email,id from login where email=? or id=?",
-    [email_username, email_username],
-    async (error, results) => {
-      if (error) {
-        //console.log(error);
-      }
-      else{
-      if (results.length > 0) {
-        db.query(
-          "Select password,id from login where email=? or id=?",
-          [email_username, email_username],
-          async (error, results) => {
-            if (error) {
-              //console.log(error);
-            }
-            if (results.length > 0) {
-              //console.log(results[0].password);
-              bcrypt.compare(password, results[0].password).then((doMatch) => {
-                if (doMatch) {
-                  req.session.Uid = results[0].id;
-                  //console.log("login Successful");
-                  if (remember == "yes") {
-                    req.session.isAuth = true;
-                    //console.log(req.session.isAuth);
-                  } else {
-                    req.session.isAuth = false;
-                    //console.log(req.session.isAuth);
-                  }
-                  if (doMatch) {
-                    req.session.canSee = true;
-                    res.redirect('/homepage')
-                  }
-                } else {
-                  req.session.msg = "Invalid Password!";
-                  return res.redirect('/login')
-                }
-              });
-            }
-          }
-        );
-      }
-      else{
-        req.session.msg = "email or username doesn't exist";
-        return res.redirect('/login')
-      }
+  let email = await USER.findOne({ email: email_username });
+
+  let uID = await USER.findOne({ ID: email_username });
+
+  if (!email && !uID) {
+    req.session.msg = "email or username doesn't exist";
+    return res.redirect('/login')
+  }
+  else {
+    let user;
+    if (email) {
+      user = email;
     }
+    else {
+      user = uID;
     }
-  );
-};
+    console.log(user);
+    if (user.password === password) {
+      req.session.Uid = user.ID;
+      //console.log("login Successful");
+      if (remember == "yes") {
+        req.session.isAuth = true;
+        //console.log(req.session.isAuth);
+      } else {
+        req.session.isAuth = false;
+        //console.log(req.session.isAuth);
+      }
+
+      req.session.canSee = true;
+      res.redirect('/homepage')
+
+    } else {
+      req.session.msg = "Invalid Password!";
+      return res.redirect('/login')
+
+    }
+  }
+}
+
+
+// exports.login = (req, res) => {
+//   //console.log(req.body);
+
+//   const { email_username, password, remember } = req.body;
+
+//   if (remember == "yes") {
+//     //console.log("remembered");
+//   }
+
+//   db.query(
+//     "Select email,id from login where email=? or id=?",
+//     [email_username, email_username],
+//     async (error, results) => {
+//       if (error) {
+//         //console.log(error);
+//       }
+//       else {
+//         if (results.length > 0) {
+//           db.query(
+//             "Select password,id from login where email=? or id=?",
+//             [email_username, email_username],
+//             async (error, results) => {
+//               if (error) {
+//                 //console.log(error);
+//               }
+//               if (results.length > 0) {
+//                 //console.log(results[0].password);
+//                 bcrypt.compare(password, results[0].password).then((doMatch) => {
+//                   if (doMatch) {
+//                     req.session.Uid = results[0].id;
+//                     //console.log("login Successful");
+//                     if (remember == "yes") {
+//                       req.session.isAuth = true;
+//                       //console.log(req.session.isAuth);
+//                     } else {
+//                       req.session.isAuth = false;
+//                       //console.log(req.session.isAuth);
+//                     }
+//                     if (doMatch) {
+//                       req.session.canSee = true;
+//                       res.redirect('/homepage')
+//                     }
+//                   } else {
+//                     req.session.msg = "Invalid Password!";
+//                     return res.redirect('/login')
+//                   }
+//                 });
+//               }
+//             }
+//           );
+//         }
+//         else {
+//           req.session.msg = "email or username doesn't exist";
+//           return res.redirect('/login')
+//         }
+//       }
+//     }
+//   );
+// };
 
 exports.homepage = (req, res) => {
   //console.log(req.body);

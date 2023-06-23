@@ -54,10 +54,11 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 450px;
+  width: 400px;
   background: white;
   border-radius: 5px;
-  padding-top: 10px;
+  padding-top: 0px;
+  padding-bottom: 0px;
   box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.05);
 }
 
@@ -93,20 +94,29 @@ body {
 form .txt_field {
   position: relative;
   border: 1px solid #adadad;
-  margin: 30px 0;
+  margin: 15px 0;
 }
 
 .txt_field input {
   width: 100%;
   padding: 0 5px;
-  height: 50px;
-  font-size: 16px;
-  border: none;
+  height: 35px;
+  font-size: 14px;
+  border: 5px;
   background: none;
   outline: none;
 }
 
+.checkbox{
+  font-size: 12px;
+}
+
+#remember {
+  margin-bottom: 20px;
+}
+
 .pass {
+  font-size: 12px;
   margin: -5px 0 20px 0px;
   color: #052afd;
   cursor: pointer;
@@ -194,11 +204,11 @@ input[type="submit"]:hover {
 }
 
 .had {
-  font-family: 'Dancing Script', cursive;
-  font-size: 3rem;
-  line-height: 2.25rem;
+  /* font-family: 'Dancing Script', cursive; */
+  font-size: 2rem;
+  /* line-height: 20px; */
   text-align: center;
-  margin-bottom: 2rem;
+  /* margin-bottom: 0px; */
   font-weight: inherit;
 }
 
@@ -258,7 +268,7 @@ form i {
 
 .center2 h1 {
   text-align: center;
-  padding: 20px 0;
+  padding: 10px 0;
 }
 
 .center2 form {
@@ -294,10 +304,6 @@ form i {
   font-size: 20px;
   margin: 10px;
 } */
-
-#remember {
-  margin-bottom: 25px;
-}
 
 .alert {
   padding-bottom: 20px;
