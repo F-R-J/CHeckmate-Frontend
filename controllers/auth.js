@@ -1,47 +1,68 @@
 require("dotenv").config();
 const db = require("../db/database");
-const jwt = require("jsonwebtoken");
+const USER = require("../db/models/loginSchema");
+//const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const fs = require("fs");
-const express = require("express");
+//const express = require("express");
 const e = require("express");
+//const async = require("hbs/lib/async");
 
 //const router = express.Router()
 
-exports.signup = (req, res) => {
+exports.signup = async (req, res) => {
   //console.log(req.body);
   var cnt1 = 0;
   var cnt2 = 0;
   const { name, email, id, password, passwordConfirm } = req.body;
 
-  db.query(
-    "select email from login where email=?",
-    [email],
-    async (error, results) => {
-      if (error) {
-        //console.log(error);
-      }
-      if (results.length > 0) {
-        return res.render("signup", {
-          layout: "/layouts/logLayout",
-          message: "The email is already in use",
-        });
-      } else if (password !== passwordConfirm) {
-        return res.render("signup", {
-          layout: "/layouts/logLayout",
-          message: "Passwords do not match",
-        });
-      } else if (password.length < 8) {
-        return res.render("signup", {
-          layout: "/layouts/logLayout",
-          message: "Password must be 8 characters long",
-        });
-      } else {
-        cnt1 = 1;
-      }
-    }
-  );
+  let user = await USER.findOne({ email: email });
+  if (user) {
+    return res.render("signup", {
+      layout: "/layouts/logLayout",
+      message: "The email is already in use",
+    });
+  } else if (password !== passwordConfirm) {
+    return res.render("signup", {
+      layout: "/layouts/logLayout",
+      message: "Passwords do not match",
+    });
+  } else if (password.length < 8) {
+    return res.render("signup", {
+      layout: "/layouts/logLayout",
+      message: "Password must be 8 characters long",
+    });
+  } else {
+    cnt1 = 1;
+  }
+  // db.query(
+  //   "select email from login where email=?",  
+  //   [email],
+  //   async (error, results) => {
+  //     if (error) {
+  //       //console.log(error);
+  //     }
+  //     if (results.length > 0) {
+  //       return res.render("signup", {
+  //         layout: "/layouts/logLayout",
+  //         message: "The email is already in use",
+  //       });
+  //     } else if (password !== passwordConfirm) {
+  //       return res.render("signup", {
+  //         layout: "/layouts/logLayout",
+  //         message: "Passwords do not match",
+  //       });
+  //     } else if (password.length < 8) {
+  //       return res.render("signup", {
+  //         layout: "/layouts/logLayout",
+  //         message: "Password must be 8 characters long",
+  //       });
+  //     } else {
+  //       cnt1 = 1;
+  //     }
+  //   }
+  // );
 
   db.query("select id from login where id=?", [id], async (error, results) => {
     if (error) {

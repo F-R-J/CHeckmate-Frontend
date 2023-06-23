@@ -15,7 +15,7 @@ const isAuth = (req, res, next) => {
 };
 
 router.get("/", isAuth, (req, res) => {
-  req.session.destroy()
+  //req.session.destroy()
   res.render("index", {
     layout: "layouts/indexLayout",
     title: "Checkmate",
