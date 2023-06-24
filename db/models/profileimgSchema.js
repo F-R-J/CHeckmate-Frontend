@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const profileimgSchema = new mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
-  ID: String,
+  uid: String,
   img: String,
 })
 
