@@ -146,16 +146,17 @@ var info = {
 
 const setVal = (req, res, next) => {
   const id = req.session.uid;
-  USER.findOne({ uid: id }, 'name email', (error, result) => {
+  console.log(id)
+  USER.findOne({ ID: id }, (error, result) => {
     if (error) {
       console.log("fuck");
       res.redirect('/');
     } else {
       if (result) {
-        console.log(result);
+        //console.log(result.uid);
         info.Email = result.email;
         info.Fname = result.name;
-        info.uname = result.id;
+        info.uname = result.ID;
         next();
       } else {
         next();
@@ -199,12 +200,30 @@ const setVal = (req, res, next) => {
 router.get("/profile", canSee, setVal, async (req, res) => {
   if (info.Fname != '') {
     const Fname = info.Fname;
-    Pimg.find({ id: req.session.uid }, function (err, row) {
+    Pimg.find({ uid: req.session.uid }, function (err, row) {
       if (err) {
         console.log(err);
       }
       else {
         console.log(row);
+        if (req.session.msg) {
+          res.render("profile", {
+            layout: "layouts/profileLayout",
+            Email: info.Email,
+            Uname: info.uname,
+            Fname: Fname,
+            rows: row,
+            msg: req.session.msg
+          });
+        } else {
+          res.render("profile", {
+            layout: "layouts/profileLayout",
+            Email: info.Email,
+            Uname: info.uname,
+            Fname: Fname,
+            rows: row
+          });
+        }
       }
     });
 
