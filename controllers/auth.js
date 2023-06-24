@@ -25,17 +25,17 @@ exports.signup = async (req, res) => {
   if (user) {
     return res.render("signup", {
       layout: "/layouts/logLayout",
-      message: "The email is already in use",
+      message: "This email is already in use.",
     });
   } else if (password !== passwordConfirm) {
     return res.render("signup", {
       layout: "/layouts/logLayout",
-      message: "Passwords do not match",
+      message: "Passwords do not match.",
     });
   } else if (password.length < 8) {
     return res.render("signup", {
       layout: "/layouts/logLayout",
-      message: "Password must be 8 characters long",
+      message: "Password must be 8 characters long.",
     });
   } else {
     cnt1 = 1;
@@ -73,7 +73,7 @@ exports.signup = async (req, res) => {
   if (userID) {
     return res.render("signup", {
       layout: "/layouts/logLayout",
-      message: "The username is already taken",
+      message: "This username is already taken.",
     });
   } else if (cnt1 == 1) {
     let hashedPassword = await bcrypt.hash(password, 8);
@@ -300,12 +300,12 @@ exports.login = async (req, res) => {
     else {
       user = uID;
     }
-    console.log(user);
+    // console.log(user);
 
 
     bcrypt.compare(password, user.password).then((doMatch) => {
       if (doMatch) {
-        req.session.Uid = user.ID;
+        req.session.uid = user.ID;
         //console.log("login Successful");
         if (remember == "yes") {
           req.session.isAuth = true;

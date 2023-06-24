@@ -1,6 +1,8 @@
 const express = require("express");
 const session = require("express-session");
 const db = require('../db/database')
+const USER = require("../db/models/loginSchema");
+const Pimg = require("../db/models/profileImgSchema");
 
 const router = express.Router();
 
@@ -79,21 +81,38 @@ const canSee = (req, res, next) => {
   }
 }
 
-router.get("/homepage", canSee, (req, res) => {
-  //console.log(req.session)
-  db.query('Select * from profileimg where uid=?', [req.session.Uid], (err, result) => {
-    if (err) {
-      //console.log(err)
-    } else {
-      delete req.session.msg;
-      res.render("homepage", {
-        layout: "layouts/homeLayout",
-        id: req.session.Uid,
-        rows: result
-      });
-    }
-  })
+// router.get("/homepage", canSee, (req, res) => {
+//   //console.log(req.session)
+//   db.query('Select * from profileimg where uid=?', [req.session.Uid], (err, result) => {
+//     if (err) {
+//       //console.log(err)
+//     } else {
+//       delete req.session.msg;
+//       res.render("homepage", {
+//         layout: "layouts/homeLayout",
+//         id: req.session.Uid,
+//         rows: result
+//       });
+//     }
+//   })
+// });
+
+router.get("/homepage", canSee, async (req, res) => {
+  // console.log(req.session)
+  let PIMG = await Pimg.findOne({ uid: req.session.uid });
+  // console.log(PIMG);
+  if (PIMG) {
+    delete req.session.msg;
+    res.render("homepage", {
+      layout: "layouts/homeLayout",
+      id: req.session.uid,
+      rows: PIMG
+    });
+  } else {
+    console.log("Profile not found");
+  }
 });
+
 
 
 var info = {
@@ -103,54 +122,115 @@ var info = {
 }
 
 
+// const setVal = (req, res, next) => {
+//   const id = req.session.Uid;
+//   db.query('Select id,name,email from login where id=?', [id], async (error, result) => {
+//     if (error) {
+//       //console.log(error)
+//       res.redirect('/')
+//     } else {
+//       if (result.length > 0) {
+//         //console.log(result[0].name)
+//         info.Email = result[0].email;
+//         info.Fname = result[0].name;
+//         info.uname = result[0].id;
+//         //console.log(info.Fname)
+//         next()
+//       } else {
+//         next()
+//       }
+//     }
+//   })
+// }
+
+
 const setVal = (req, res, next) => {
-  const id = req.session.Uid;
-  db.query('Select id,name,email from login where id=?', [id], async (error, result) => {
+  const id = req.session.uid;
+  USER.findOne({ uid: id }, 'name email', (error, result) => {
     if (error) {
-      //console.log(error)
-      res.redirect('/')
+      console.log("fuck");
+      res.redirect('/');
     } else {
-      if (result.length > 0) {
-        //console.log(result[0].name)
-        info.Email = result[0].email;
-        info.Fname = result[0].name;
-        info.uname = result[0].id;
-        //console.log(info.Fname)
-        next()
+      if (result) {
+        console.log(result);
+        info.Email = result.email;
+        info.Fname = result.name;
+        info.uname = result.id;
+        next();
       } else {
-        next()
+        next();
       }
     }
-  })
-}
+  });
+};
 
-router.get("/profile", canSee, setVal, (req, res) => {
+
+// router.get("/profile", canSee, setVal, (req, res) => {
+//   if (info.Fname != '') {
+//     const Fname = info.Fname;
+//     db.query('Select * from profileimg where uid=?', [req.session.Uid], (err, result) => {
+//       if (err) {
+//         //console.log(err)
+//       } else {
+//         if (req.session.msg) {
+//           res.render("profile", {
+//             layout: "layouts/profileLayout",
+//             Email: info.Email,
+//             Uname: info.uname,
+//             Fname: Fname,
+//             rows: result,
+//             msg: req.session.msg
+//           });
+//         } else {
+//           res.render("profile", {
+//             layout: "layouts/profileLayout",
+//             Email: info.Email,
+//             Uname: info.uname,
+//             Fname: Fname,
+//             rows: result
+//           });
+//         }
+//       }
+//     })
+//   }
+// });
+
+
+router.get("/profile", canSee, setVal, async (req, res) => {
   if (info.Fname != '') {
     const Fname = info.Fname;
-    db.query('Select * from profileimg where uid=?', [req.session.Uid], (err, result) => {
+    Pimg.find({ id: req.session.uid }, function (err, row) {
       if (err) {
-        //console.log(err)
-      } else {
-        if (req.session.msg) {
-          res.render("profile", {
-            layout: "layouts/profileLayout",
-            Email: info.Email,
-            Uname: info.uname,
-            Fname: Fname,
-            rows: result,
-            msg: req.session.msg
-          });
-        } else {
-          res.render("profile", {
-            layout: "layouts/profileLayout",
-            Email: info.Email,
-            Uname: info.uname,
-            Fname: Fname,
-            rows: result
-          });
-        }
+        console.log(err);
       }
-    })
+      else {
+        console.log(row);
+      }
+    });
+
+    // if (err) {
+    //   // console.log(err)
+    // } else {
+    //   if (req.session.msg) {
+    //     res.render("profile", {
+    //       layout: "layouts/profileLayout",
+    //       Email: info.Email,
+    //       Uname: info.uname,
+    //       Fname: Fname,
+    //       rows: result,
+    //       msg: req.session.msg
+    //     });
+    //   } else {
+    //     res.render("profile", {
+    //       layout: "layouts/profileLayout",
+    //       Email: info.Email,
+    //       Uname: info.uname,
+    //       Fname: Fname,
+    //       rows: result
+    //     });
+    //   }
+    // }
+    // });
   }
 });
 
@@ -160,24 +240,23 @@ router.get("/forgotpassword", (req, res) => {
   });
 });
 
-const isallow = (req,res,next)=>{
-  if(req.session.reset === true){
+const isallow = (req, res, next) => {
+  if (req.session.reset === true) {
     next()
   }
-  else{
+  else {
     res.redirect('/forgotpassword')
   }
 }
 
-
-router.get("/resetpassword",isallow, (req, res) => {
-  if(req.session.msg){
+router.get("/resetpassword", isallow, (req, res) => {
+  if (req.session.msg) {
     delete req.session.reset
     res.render("resetpassword", {
       layout: "layouts/logLayout",
       message: req.session.msg
     });
-  }else{
+  } else {
     delete req.session.reset
     res.render("resetpassword", {
       layout: "layouts/logLayout",
@@ -205,51 +284,55 @@ router.post('/profile_img', (req, res) => {
   if (!req.files || Object.keys(req.files).length === 0) {
     //return res.status(400).send('No files were uploaded');
     if (req.body.fname != "") {
-      const {
-        fname
-      } = req.body;
-      let iid = req.session.Uid;
-      db.query("UPDATE login SET name=? WHERE id=?", [fname, iid], (err1, ans) => {
+      const { fname } = req.body;
+      let iid = req.session.uid;
+      db.collection("login").updateOne({ id: iid }), { $set: { name: fname } }, (err1, ans) => {
         if (err1) {
           //console.log(err1)
         } else {
           res.redirect('/profile')
         }
-      })
+      }
     } else {
       res.redirect('/profile')
     }
   } else {
     samfile = req.files.profile_image;
     //console.log(samfile);
-    let id = req.session.Uid;
+    let id = req.session.uid;
     let filename = id + 'profile.jpg';
     uploadpath = __dirname + '/../uploads/' + filename;
     samfile.mv(uploadpath, (err) => {
       if (err) {
         return res.status(500).send(err);
       }
-      db.query("UPDATE profileimg SET img=? Where uid=?", [filename, id], (error, result) => {
-        if (!error) {
-          if (req.body.fname != "") {
-            const {
-              fname
-            } = req.body;
-            let iid = req.session.Uid;
-            db.query("UPDATE login SET name=? WHERE id=?", [fname, iid], (err1, ans) => {
-              if (err1) {
-                //console.log(err1)
-              } else {
-                res.redirect('/profile')
-              }
-            })
+      db.collection("Pimg").updateOne(
+        { uid: id },
+        { $set: { img: filename } },
+        (error, result) => {
+          if (!error) {
+            if (req.body.fname != "") {
+              const {
+                fname
+              } = req.body;
+              let iid = req.session.uid;
+              db.collection("login").updateOne(
+                { id: iid },
+                { $set: { name: fname } },
+                (err1, ans) => {
+                  if (err1) {
+                    //console.log(err1)
+                  } else {
+                    res.redirect('/profile')
+                  }
+                })
+            } else {
+              res.redirect('/profile')
+            }
           } else {
-            res.redirect('/profile')
+            //console.log(error);
           }
-        } else {
-          //console.log(error);
-        }
-      })
+        })
     })
   }
 })

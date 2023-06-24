@@ -7,17 +7,19 @@
       <input type="text" name="name" placeholder="Full Name" id="name" required />
     </div>
     <div class="txt_field">
-      <input type="text" name="id" placeholder="Select Username" id="id" required />
+      <input type="text" name="id" placeholder="Select Username" id="id" autocomplete="Username" required />
     </div>
     <div class="txt_field">
-      <input type="email" name="email" placeholder="Email" id="email" required />
+      <input type="email" name="email" placeholder="Email" id="email" autocomplete="email" required />
     </div>
     <div class="txt_field">
-      <input type="password" name="password" placeholder="Password" id="password" required />
+      <input type="password" name="password" placeholder="Password" id="password" autocomplete="current-password"
+        required />
       <i class="bi bi-eye-slash" id="togglePassword"></i>
     </div>
     <div class="txt_field">
-      <input type="password" name="passwordConfirm" placeholder="Confirm Password" id="passwordConfirm" required />
+      <input type="password" name="passwordConfirm" placeholder="Confirm Password" id="passwordConfirm"
+        autocomplete="current-password" required />
       <i class="bi bi-eye-slash" id="togglePassword1"></i>
     </div>
 
@@ -26,8 +28,6 @@
     {{/if}}
 
     <button type="submit" id="button1" class="button1">
-      <span>
-      </span>
       Create Account
     </button>
     <div class="privacy"> By signing in you agree to our <a class="blue" href="terms&policy">Privacy
