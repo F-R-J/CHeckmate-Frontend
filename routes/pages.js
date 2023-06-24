@@ -114,7 +114,6 @@ router.get("/homepage", canSee, async (req, res) => {
 });
 
 
-
 var info = {
   Fname: '',
   uname: '',
@@ -146,10 +145,10 @@ var info = {
 
 const setVal = (req, res, next) => {
   const id = req.session.uid;
-  console.log(id)
+  // console.log(id)
   USER.findOne({ ID: id }, (error, result) => {
     if (error) {
-      console.log("fuck");
+      // console.log(error);
       res.redirect('/');
     } else {
       if (result) {
@@ -205,8 +204,8 @@ router.get("/profile", canSee, setVal, async (req, res) => {
         console.log(err);
       }
       else {
-        console.log(row);
-        if (req.session.msg) {
+        // console.log(row);
+        if (req.session.uid) {
           res.render("profile", {
             layout: "layouts/profileLayout",
             Email: info.Email,
@@ -297,7 +296,7 @@ router.get("/brickbreak", (req, res) => {
 
 
 router.post('/profile_img', (req, res) => {
-  ////console.log(req.body)
+  // console.log(req.body)
   let samfile;
   let uploadpath;
   if (!req.files || Object.keys(req.files).length === 0) {
@@ -305,13 +304,13 @@ router.post('/profile_img', (req, res) => {
     if (req.body.fname != "") {
       const { fname } = req.body;
       let iid = req.session.uid;
-      db.collection("login").updateOne({ id: iid }), { $set: { name: fname } }, (err1, ans) => {
+      USER.update({ ID: iid }, { $set: { name: fname } }, (err1, ans) => {
         if (err1) {
-          //console.log(err1)
+          console.log(err1);
         } else {
           res.redirect('/profile')
         }
-      }
+      });
     } else {
       res.redirect('/profile')
     }
@@ -325,33 +324,28 @@ router.post('/profile_img', (req, res) => {
       if (err) {
         return res.status(500).send(err);
       }
-      db.collection("Pimg").updateOne(
-        { uid: id },
-        { $set: { img: filename } },
-        (error, result) => {
-          if (!error) {
-            if (req.body.fname != "") {
-              const {
-                fname
-              } = req.body;
-              let iid = req.session.uid;
-              db.collection("login").updateOne(
-                { id: iid },
-                { $set: { name: fname } },
-                (err1, ans) => {
-                  if (err1) {
-                    //console.log(err1)
-                  } else {
-                    res.redirect('/profile')
-                  }
-                })
-            } else {
-              res.redirect('/profile')
-            }
+      Pimg.update({ uid: id }, { $set: { img: filename } }, (error, result) => {
+        if (!error) {
+          if (req.body.fname != "") {
+            const { fname } = req.body;
+            let iid = req.session.uid;
+            USER.updateOne(
+              { id: iid },
+              { $set: { name: fname } },
+              (err1, ans) => {
+                if (err1) {
+                  //console.log(err1)
+                } else {
+                  res.redirect('/profile')
+                }
+              })
           } else {
-            //console.log(error);
+            res.redirect('/profile')
           }
-        })
+        } else {
+          //console.log(error);
+        }
+      })
     })
   }
 })
