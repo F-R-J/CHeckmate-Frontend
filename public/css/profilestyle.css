@@ -5,7 +5,7 @@
 }
 
 .mpcont {
-    padding-top: 50px;
+    padding-top: 100px;
     height: 100vh;
 }
 
@@ -20,7 +20,6 @@
     display: block;
     margin-left: auto;
     margin-right: auto;
-    width: 50%;
     width: 120px;
     height: 120px;
     border-radius: 50%;

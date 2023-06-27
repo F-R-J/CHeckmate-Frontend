@@ -99,7 +99,7 @@ const canSee = (req, res, next) => {
 
 router.get("/homepage", canSee, async (req, res) => {
   // console.log(req.session)
-  let PIMG = await Pimg.findOne({ uid: req.session.uid });
+  let PIMG = await Pimg.find({ uid: req.session.uid });
   // console.log(PIMG);
   if (PIMG) {
     delete req.session.msg;
@@ -329,16 +329,13 @@ router.post('/profile_img', (req, res) => {
           if (req.body.fname != "") {
             const { fname } = req.body;
             let iid = req.session.uid;
-            USER.updateOne(
-              { id: iid },
-              { $set: { name: fname } },
-              (err1, ans) => {
-                if (err1) {
-                  //console.log(err1)
-                } else {
-                  res.redirect('/profile')
-                }
-              })
+            USER.updateOne({ id: iid }, { $set: { name: fname } }, (err1, ans) => {
+              if (err1) {
+                //console.log(err1)
+              } else {
+                res.redirect('/profile')
+              }
+            })
           } else {
             res.redirect('/profile')
           }
