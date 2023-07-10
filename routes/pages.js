@@ -16,6 +16,7 @@ const isAuth = (req, res, next) => {
   }
 };
 
+
 router.get("/", isAuth, (req, res) => {
   //req.session.destroy()
   res.render("index", {
@@ -34,10 +35,12 @@ router.get("/signup", (req, res) => {
 
 router.get("/login", (req, res) => {
   if (req.session.msg) {
+    const message = req.session.msg;
+    delete req.session.msg;
     res.render("login", {
       layout: "layouts/logLayout",
       title: "Checkmate",
-      message: req.session.msg
+      message: message
     });
   } else {
     res.render("login", {
@@ -81,21 +84,6 @@ const canSee = (req, res, next) => {
   }
 }
 
-// router.get("/homepage", canSee, (req, res) => {
-//   //console.log(req.session)
-//   db.query('Select * from profileimg where uid=?', [req.session.Uid], (err, result) => {
-//     if (err) {
-//       //console.log(err)
-//     } else {
-//       delete req.session.msg;
-//       res.render("homepage", {
-//         layout: "layouts/homeLayout",
-//         id: req.session.Uid,
-//         rows: result
-//       });
-//     }
-//   })
-// });
 
 router.get("/homepage", canSee, async (req, res) => {
   // console.log(req.session)
@@ -121,28 +109,6 @@ var info = {
 }
 
 
-// const setVal = (req, res, next) => {
-//   const id = req.session.Uid;
-//   db.query('Select id,name,email from login where id=?', [id], async (error, result) => {
-//     if (error) {
-//       //console.log(error)
-//       res.redirect('/')
-//     } else {
-//       if (result.length > 0) {
-//         //console.log(result[0].name)
-//         info.Email = result[0].email;
-//         info.Fname = result[0].name;
-//         info.uname = result[0].id;
-//         //console.log(info.Fname)
-//         next()
-//       } else {
-//         next()
-//       }
-//     }
-//   })
-// }
-
-
 const setVal = (req, res, next) => {
   const id = req.session.uid;
   // console.log(id)
@@ -163,37 +129,6 @@ const setVal = (req, res, next) => {
     }
   });
 };
-
-
-// router.get("/profile", canSee, setVal, (req, res) => {
-//   if (info.Fname != '') {
-//     const Fname = info.Fname;
-//     db.query('Select * from profileimg where uid=?', [req.session.Uid], (err, result) => {
-//       if (err) {
-//         //console.log(err)
-//       } else {
-//         if (req.session.msg) {
-//           res.render("profile", {
-//             layout: "layouts/profileLayout",
-//             Email: info.Email,
-//             Uname: info.uname,
-//             Fname: Fname,
-//             rows: result,
-//             msg: req.session.msg
-//           });
-//         } else {
-//           res.render("profile", {
-//             layout: "layouts/profileLayout",
-//             Email: info.Email,
-//             Uname: info.uname,
-//             Fname: Fname,
-//             rows: result
-//           });
-//         }
-//       }
-//     })
-//   }
-// });
 
 
 router.get("/profile", canSee, setVal, async (req, res) => {
@@ -225,30 +160,6 @@ router.get("/profile", canSee, setVal, async (req, res) => {
         }
       }
     });
-
-    // if (err) {
-    //   // console.log(err)
-    // } else {
-    //   if (req.session.msg) {
-    //     res.render("profile", {
-    //       layout: "layouts/profileLayout",
-    //       Email: info.Email,
-    //       Uname: info.uname,
-    //       Fname: Fname,
-    //       rows: result,
-    //       msg: req.session.msg
-    //     });
-    //   } else {
-    //     res.render("profile", {
-    //       layout: "layouts/profileLayout",
-    //       Email: info.Email,
-    //       Uname: info.uname,
-    //       Fname: Fname,
-    //       rows: result
-    //     });
-    //   }
-    // }
-    // });
   }
 });
 
@@ -329,7 +240,7 @@ router.post('/profile_img', (req, res) => {
           if (req.body.fname != "") {
             const { fname } = req.body;
             let iid = req.session.uid;
-            USER.updateOne({ id: iid }, { $set: { name: fname } }, (err1, ans) => {
+            USER.updateOne({ ID: iid }, { $set: { name: fname } }, (err1, ans) => {
               if (err1) {
                 //console.log(err1)
               } else {

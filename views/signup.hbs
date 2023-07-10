@@ -23,9 +23,11 @@
       <i class="bi bi-eye-slash" id="togglePassword1"></i>
     </div>
 
-    {{#if message }}
-    <h4 class="alert alert-danger mt-4">{{message}}</h4>
-    {{/if}}
+    <div id="message-container">
+      {{#if message }}
+      <h4 class="alert alert-danger mt-4">{{message}}</h4>
+      {{/if}}
+    </div>
 
     <button type="submit" id="button1" class="button1">
       Create Account
@@ -60,4 +62,11 @@
 
     this.classList.toggle('bi-eye');
   });
+
+  setTimeout(function () {
+    var messageContainer = document.getElementById('message-container');
+    if (messageContainer) {
+      messageContainer.parentNode.removeChild(messageContainer);
+    }
+  }, 3000);
 </script>

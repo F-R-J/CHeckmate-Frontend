@@ -81,51 +81,46 @@ router.post('/verify1', (req, res) => {
 })
 
 router.post('/changepass', (req, res) => {
-  // console.log(req.body);
-  // console.log(req.session.uid);
-  USER.find({ password: req.session.uid }, (error, result) => {
+  const { opass, npass, ncpass } = req.body;
+  USER.findOne({ ID: req.session.uid }, async (error, result) => {
     if (error) {
-      // console.log("error")
+      console.log(error)
       res.redirect('/profile')
-    } else {
-      console.log(req.body.opass);
-      console.log(result[0].password);
-      bcrypt.compare(req.body.opass, result[0].password).then(async (doMatch) => {
-        console.log("result 2");
-        if (doMatch) {
-          if (req.body.npass != req.body.ncpass) {
-            req.session.msg = "new password doesn't matched try again"
-            res.redirect('/profile')
-          } else {
-            if (req.body.npass.length < 8) {
-              req.session.msg = 'New password must be 8 character long'
-              res.redirect('/profile')
-            }
-            else {
-              delete req.session.msg;
-              let hashedpass = await bcrypt.hash(req.body.npass, 8);
-              console.log(hashedpass);
-              console.log("result 3");
-              USER.update({ ID: req.session.uid }, { $set: { password: hashedpass } }, (err1, ans) => {
-                if (err1) {
-                  console.log("result 4");
-                  req.session.msg = "Something went wrong try again";
-                  res.redirect('/profile')
-                }
-                else {
-                  res.redirect('/profile')
-                }
-              });
-            }
-          }
-        } else {
-          req.session.msg = 'Old password do not matched try again'
-          res.redirect('/profile')
-        }
-      });
     }
-  })
-})
+    try {
+      const doMatch = await bcrypt.compare(opass, result.password);
+      if (doMatch) {
+        if (npass !== ncpass) {
+          req.session.msg = 'New password do not matched try again';
+          return res.redirect('/profile');
+        }
+        if (npass.length < 8) {
+          req.session.msg = 'New password must be 8 character long';
+          return res.redirect('/profile');
+        }
+        delete req.session.msg;
+
+        const hashedpass = await bcrypt.hash(npass, 8);
+
+        USER.updateOne({ ID: req.session.uid }, { $set: { password: hashedpass } }, (err, result) => {
+          if (err) {
+            console.error(err);
+            req.session.msg = 'Something went wrong, please try again';
+            return res.redirect('/profile');
+          }
+          return res.redirect('/profile');
+        });
+      } else {
+        req.session.msg = 'Old password does not match, please try again';
+        return res.redirect('/profile');
+      }
+    } catch (error) {
+      console.error(error);
+      req.session.msg = 'Something went wrong, please try again';
+      return res.redirect('/profile');
+    }
+  });
+});
 
 router.post("/logout", (req, res) => {
   req.session.isAuth = false;

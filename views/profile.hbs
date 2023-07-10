@@ -83,9 +83,11 @@
                     {{else}} placeholder="Example Full name" {{/if}}>
                 </div>
 
-                {{#if msg}}
-                <h1 style="color: red; font-size: 15px;text-align:center;">{{{msg}}}</h1>
-                {{/if}}
+                <div id="message-container">
+                  {{#if msg}}
+                  <h1 style="color: red; font-size: 18px; text-align: center;"><b>{{{msg}}}</b></h1>
+                  {{/if}}
+                </div>
 
               </div>
 
@@ -175,4 +177,11 @@
 
     this.classList.toggle('bi-eye');
   });
+
+  setTimeout(function () {
+    var messageContainer = document.getElementById('message-container');
+    if (messageContainer) {
+      messageContainer.parentNode.removeChild(messageContainer);
+    }
+  }, 3000);
 </script>
