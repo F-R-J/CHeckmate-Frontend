@@ -1,22 +1,23 @@
-require("dotenv").config();
-const db = require("../db/database");
+// external modules
+const dotenv = require("dotenv")
 const mongoose = require("mongoose");
 const USER = require("../db/models/loginSchema");
 const Pimg = require("../db/models/profileImgSchema");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const fs = require("fs");
-const e = require("express");
 
+dotenv.config();
 
+// const e = require("express");
+// const db = require("../db/database");
 //const jwt = require("jsonwebtoken");
 //const express = require("express");
 //const async = require("hbs/lib/async");
 //const router = express.Router()
 
-
+// signup controller
 exports.signup = async (req, res) => {
-  //console.log(req.body);
   var cnt1 = 0;
   const { name, email, id, password, passwordConfirm } = req.body;
 
@@ -49,7 +50,7 @@ exports.signup = async (req, res) => {
     });
   } else if (cnt1 == 1) {
     let hashedPassword = await bcrypt.hash(password, 8);
-    //console.log(hashedPassword);
+
     var digits = "0123456789";
     let OTP = "";
     for (let i = 0; i < 6; i++) {
@@ -57,29 +58,28 @@ exports.signup = async (req, res) => {
     }
 
     let transporter = nodemailer.createTransport({
-      service: "gmail",
+      service: process.env.SERVICE_NAME,
       auth: {
-        user: "checkmate.sdp@gmail.com",
-        pass: "chietjvndhjaugpn",
+        user: process.env.GMAIL,
+        pass: process.env.AUTH_PASS,
       },
     });
+
     let mailOptions = {
-      from: "checkmate.sdp@gmail.com",
+      from: process.env.GMAIL,
       to: email,
-      subject: "Verification code for Checkmate profile.",
-      text: "Your OTP is : " + OTP,
+      subject: process.env.GMAIL_RESET,
+      text: process.env.GMAIL_MESSAGE + OTP,
     }
 
     transporter.sendMail(mailOptions, function (error, info) {
       if (error) {
-        //console.log(error);
       } else {
-        //console.log("Email sent: " + info.response);
         const user = {
-          name: name,
-          id: id,
-          email: email,
-          OTP: OTP,
+          name,
+          id,
+          email,
+          OTP,
           pass: hashedPassword,
         };
 
@@ -146,7 +146,7 @@ exports.verify = async (req, res) => {
         console.log("OTP verified");
         await setuser(user);
         await setpimg(user);
-        delete req.session.msg
+        delete req.session.msg;
         res.redirect('/login')
       } else {
         req.session.msg = 'Incorrect OTP!!'
@@ -165,11 +165,10 @@ exports.login = async (req, res) => {
   }
 
   let email = await USER.findOne({ email: email_username });
-
   let uID = await USER.findOne({ ID: email_username });
 
   if (!email && !uID) {
-    req.session.msg = "Email or username doesn't exist";
+    req.session.msg = "Email or Username doesn't exist";
     return res.redirect('/login')
   }
   else {
@@ -186,13 +185,10 @@ exports.login = async (req, res) => {
     bcrypt.compare(password, user.password).then((doMatch) => {
       if (doMatch) {
         req.session.uid = user.ID;
-        //console.log("login Successful");
         if (remember == "yes") {
           req.session.isAuth = true;
-          //console.log(req.session.isAuth);
         } else {
           req.session.isAuth = false;
-          //console.log(req.session.isAuth);
         }
         req.session.canSee = true;
         res.redirect('/homepage')
@@ -207,9 +203,10 @@ exports.login = async (req, res) => {
 
 
 exports.homepage = (req, res) => {
-  //console.log(req.body);
-
-  //const { email_username, password } = req.body;
+  res.render("homepage", {
+    layout: "layouts/homeLayout",
+    id: req.session.uid
+  });
 };
 
 exports.chessgame = (req, res) => {

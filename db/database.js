@@ -12,7 +12,9 @@
 // module.exports = database;
 
 const mongoose = require('mongoose');
-require('dotenv').config();
+const dotenv = require("dotenv")
+
+dotenv.config();
 
 module.exports = {
   init: () => {
@@ -25,7 +27,7 @@ module.exports = {
       family: 4
     };
 
-    mongoose.connect(`mongodb+srv://arrahat777:beaking12@mernfirst.k4myuar.mongodb.net/techNotesDB?retryWrites=true&w=majority`, dbOptions);
+    mongoose.connect(process.env.MONGO_URL, dbOptions);
     mongoose.set('useFindAndModify', false);
     mongoose.Promise = global.Promise;
     mongoose.connection.on('connected', () => {

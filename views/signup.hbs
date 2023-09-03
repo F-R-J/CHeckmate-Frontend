@@ -47,20 +47,17 @@
   const passwordConfirm = document.querySelector('#passwordConfirm');
 
   togglePassword.addEventListener('click', () => {
-
     const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-
     password.setAttribute('type', type);
 
-    this.classList.toggle('bi-eye');
+    togglePassword.classList.toggle('bi-eye');
   });
+
   togglePassword1.addEventListener('click', () => {
-
     const type = passwordConfirm.getAttribute('type') === 'password' ? 'text' : 'password';
-
     passwordConfirm.setAttribute('type', type);
 
-    this.classList.toggle('bi-eye');
+    togglePassword1.classList.toggle('bi-eye');
   });
 
   setTimeout(function () {

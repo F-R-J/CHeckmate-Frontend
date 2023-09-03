@@ -1,14 +1,15 @@
-require("dotenv").config();
+const dotenv = require("dotenv")
 const express = require("express");
 const authcontroller = require("../controllers/auth");
-const db = require('../db/database');
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
-const e = require("express");
 const USER = require("../db/models/loginSchema");
-const Pimg = require("../db/models/profileImgSchema");
-
 const router = express.Router();
+dotenv.config();
+
+// const e = require("express");
+// const db = require('../db/database');
+// const Pimg = require("../db/models/profileImgSchema");
 
 router.post("/signup", authcontroller.signup);
 router.post("/verify", authcontroller.verify);
@@ -18,15 +19,12 @@ router.post("/chessgame", authcontroller.chessgame);
 
 
 router.post('/verify_email', (req, res) => {
-  //console.log('aise');
   const email = req.body.email;
   USER.find({ email: email }, (err, result) => {
     if (err) {
-      //console.log(err);
       res.redirect('/forgotpassword')
     } else {
       if (result.length > 0) {
-
         var digits = "0123456789";
         let OTP = "";
         for (let i = 0; i < 6; i++) {
@@ -34,32 +32,30 @@ router.post('/verify_email', (req, res) => {
         }
 
         let transporter = nodemailer.createTransport({
-          service: "gmail",
+          service: process.env.SERVICE_NAME,
           auth: {
-            user: "checkmate.sdp@gmail.com",
-            pass: "chietjvndhjaugpn",
+            user: process.env.GMAIL,
+            pass: process.env.AUTH_PASS,
           },
         });
 
         let mailOptions = {
-          from: "checkmate.sdp@gmail.com",
+          from: process.env.GMAIL,
           to: email,
-          subject: "Verification code for reset password.",
-          text: "Your OTP is : " + OTP,
+          subject: process.env.GMAIL_SUBJECT,
+          text: process.env.GMAIL_MESSAGE + OTP,
         };
 
         transporter.sendMail(mailOptions, function (error, info) {
           if (error) {
-            //console.log(error);
           } else {
-            //console.log("Email sent: " + info.response);
             req.session.email = email;
             req.session.OTP = OTP;
+            req.session.canSeeVarify1 = true;
             res.redirect('/verify1')
           }
         });
-      }
-      else {
+      } else {
         res.redirect('/forgotpassword')
       }
     }
@@ -68,7 +64,6 @@ router.post('/verify_email', (req, res) => {
 
 router.post('/verify1', (req, res) => {
   const otp = req.body.OTP;
-  ////console.log(req.body)
   if (otp === req.session.OTP) {
     delete req.session.msg
     req.session.reset = true;
@@ -126,7 +121,6 @@ router.post("/logout", (req, res) => {
   req.session.isAuth = false;
   req.session.destroy((error) => {
     if (error) {
-      //console.log(error)
     } else {
       res.redirect("/")
     }
@@ -151,7 +145,6 @@ router.post('/resetpass', async (req, res) => {
       let hashpass = await bcrypt.hash(pass, 8);
       USER.updateOne({ password: req.session.id }, { $set: { password: hashpass } }, (err, ans) => {
         if (err) {
-          //console.log(err)
           req.session.msg = 'Error occure during change try again'
           req.session.reset = true;
           res.redirect('/resetpassword')
@@ -164,7 +157,5 @@ router.post('/resetpass', async (req, res) => {
     }
   }
 })
-
-
 
 module.exports = router;

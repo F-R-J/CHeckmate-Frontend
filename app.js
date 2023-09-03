@@ -1,49 +1,43 @@
+//external modules
 const express = require("express");
 const path = require("path");
-const db = require('./db/database') 
+const db = require('./db/database')
 const fileupload = require('express-fileupload')
-
-require("dotenv").config({
-  path: "./.env",
-});
-
-const nodemailer = require("nodemailer");
+const dotenv = require("dotenv")
 const session = require("express-session");
 var MySQLStore = require('connect-mongo')(session);
 
+// internal modules
+dotenv.config({
+  path: "./.env",
+});
+
+// initializing express
 const app = express();
 
+// static files
 const publicDirectory = path.join(__dirname, "./public");
 app.use(express.static(publicDirectory));
 app.use(fileupload())
 app.use(express.static('uploads'));
 
-
+// session config
 app.use(
   session({
-    key: "checkmate",
-    secret: "sdp@checkmate",
+    key: process.env.SESSION_KEY,
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: {
-      maxAge: 1000 * 60 * 60 * 24
+      maxAge: 86400000
     },
     store: new MySQLStore({
-      url: 'mongodb+srv://arrahat777:beaking12@mernfirst.k4myuar.mongodb.net/techNotesDB?retryWrites=true&w=majority', //YOUR MONGODB URL
+      url: process.env.MONGO_URL,
       ttl: 14 * 24 * 60 * 60,
       autoRemove: 'native'
-  })
+    })
   })
 );
-
-// app.use(session(
-//   secret: 'SECRET KEY',
-//   resave: false,
-//   saveUninitialized: true,
-  
-// ))
-
-
 
 // Parsing josn body
 app.use(express.json());
@@ -63,6 +57,7 @@ db.init();
 
 const port = process.env.PORT || 5001;
 
+// starting server
 app.listen(port, (err) => {
   if (err) {
     //console.log(err);

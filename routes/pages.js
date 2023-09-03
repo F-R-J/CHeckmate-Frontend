@@ -1,6 +1,6 @@
 const express = require("express");
-const session = require("express-session");
-const db = require('../db/database')
+// const session = require("express-session");
+// const db = require('../db/database')
 const USER = require("../db/models/loginSchema");
 const Pimg = require("../db/models/profileImgSchema");
 
@@ -8,7 +8,6 @@ const router = express.Router();
 
 // Express middleware to prevent unauthorize navigations
 const isAuth = (req, res, next) => {
-  //console.log(req.session);
   if (req.session.isAuth === true) {
     res.redirect("/homepage");
   } else {
@@ -29,7 +28,7 @@ router.get("/", isAuth, (req, res) => {
 router.get("/signup", (req, res) => {
   res.render("signup", {
     layout: "layouts/logLayout",
-    title: "Checkmate",
+    title: "Checkmate | Sign Up",
   });
 });
 
@@ -39,13 +38,13 @@ router.get("/login", (req, res) => {
     delete req.session.msg;
     res.render("login", {
       layout: "layouts/logLayout",
-      title: "Checkmate",
+      title: "Checkmate | Login",
       message: message
     });
   } else {
     res.render("login", {
       layout: "layouts/logLayout",
-      title: "Checkmate",
+      title: "Checkmate | Login",
     });
   }
 });
@@ -147,6 +146,7 @@ router.get("/profile", canSee, setVal, async (req, res) => {
             Uname: info.uname,
             Fname: Fname,
             rows: row,
+            id: req.session.uid,
             msg: req.session.msg
           });
         } else {
@@ -155,6 +155,7 @@ router.get("/profile", canSee, setVal, async (req, res) => {
             Email: info.Email,
             Uname: info.uname,
             Fname: Fname,
+            id: req.session.uid,
             rows: row
           });
         }
@@ -215,7 +216,7 @@ router.post('/profile_img', (req, res) => {
     if (req.body.fname != "") {
       const { fname } = req.body;
       let iid = req.session.uid;
-      USER.update({ ID: iid }, { $set: { name: fname } }, (err1, ans) => {
+      USER.updateOne({ ID: iid }, { $set: { name: fname } }, (err1, ans) => {
         if (err1) {
           console.log(err1);
         } else {
@@ -235,7 +236,7 @@ router.post('/profile_img', (req, res) => {
       if (err) {
         return res.status(500).send(err);
       }
-      Pimg.update({ uid: id }, { $set: { img: filename } }, (error, result) => {
+      Pimg.updateOne({ uid: id }, { $set: { img: filename } }, (error, result) => {
         if (!error) {
           if (req.body.fname != "") {
             const { fname } = req.body;
