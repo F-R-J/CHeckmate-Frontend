@@ -2,7 +2,7 @@ const express = require("express");
 // const session = require("express-session");
 // const db = require('../db/database')
 const USER = require("../db/models/loginSchema");
-const Pimg = require("../db/models/profileImgSchema");
+const Pimg = require("../db/models/profileimgSchema");
 
 const router = express.Router();
 
