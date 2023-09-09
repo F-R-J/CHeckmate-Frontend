@@ -3,6 +3,7 @@ const dotenv = require("dotenv")
 const mongoose = require("mongoose");
 const USER = require("../db/models/loginSchema");
 const Pimg = require("../db/models/profileImgSchema");
+const Chess = require("../db/models/chessSchema");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const fs = require("fs");
@@ -191,6 +192,33 @@ exports.login = async (req, res) => {
           req.session.isAuth = false;
         }
         req.session.canSee = true;
+
+
+
+        var cookies=(function(str){ 
+          var result={};
+          str.split(/;\s+/).forEach(function(e){
+            var parts=e.split(/=/,2);
+            result[parts[0]]=parts[1]||'';
+          });
+          return result;
+        })(req.headers.cookie),
+        sessionCookieName='checkmate',
+        sessionId=cookies[sessionCookieName]||'nothing';
+        sessionId = sessionId.slice(4).trim();
+        var idd = sessionId.split('.',2);
+
+        let chess = new Chess({
+          _id: mongoose.Types.ObjectId(),
+          ID: idd[0],
+          uid: user.ID
+        })
+        chess.save().then((result) => {
+          console.log(result);
+        }).catch((err) => {
+          console.log(err);
+        })
+        
         res.redirect('/homepage')
       }
       else {
